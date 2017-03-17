@@ -1,6 +1,13 @@
 # {{ ansible_managed }}
 
-"{{ item.path }}" {
+{% if item.path is iterable and not item.path is string -%}
+{% for path in item.path %}
+{{ path | quote }}
+{% endfor %}
+{%- else -%}
+{{ item.path | quote }}
+{%- endif %}
+{
   {% if item.options is defined -%}
   {% for option in item.options -%}
   {{ option }}
