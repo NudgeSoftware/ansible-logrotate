@@ -11,3 +11,14 @@
     dest: "{{ logrotate_conf_dir }}{{ item.name }}"
   with_items: "{{ logrotate_scripts }}"
   when: logrotate_scripts is defined
+
+- name: Cron job for rotations
+  cron:
+    name: "logrotate"
+    minute: "{{schedule.minute|default('*')}}"
+    hour: "{{schedule.hour|default('*')}}"
+    day: "{{schedule.day|default('*')}}"
+    weekday: "{{schedule.weekday|default('*')}}"
+    month: "{{schedule.month|default('*')}}"
+    job: /usr/sbin/logrotate /etc/logrotate.conf
+  when: schedule is defined
